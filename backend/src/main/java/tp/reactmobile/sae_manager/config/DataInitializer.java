@@ -1,7 +1,7 @@
-package fr.mmi.sae.config;
+package tp.reactmobile.sae_manager.config;
 
-import fr.mmi.sae.model.Sae;
-import fr.mmi.sae.repository.SaeRepository;
+import tp.reactmobile.sae_manager.model.Sae;
+import tp.reactmobile.sae_manager.repository.SaeRepository;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -15,8 +15,6 @@ public class DataInitializer {
     @Bean
     public CommandLineRunner loadData(SaeRepository repository) {
         return args -> {
-            // Création de fausses données de test
-
             Sae sae1 = new Sae();
             sae1.setTitre("Création d'un site e-commerce");
             sae1.setAnnee("MMI2");
@@ -65,7 +63,6 @@ public class DataInitializer {
             sae3.setLienProduction("");
             sae3.setImagesUrl(Arrays.asList("https://picsum.photos/400/304"));
 
-            // Sauvegarde dans la base
             repository.saveAll(Arrays.asList(sae1, sae2, sae3));
         };
     }

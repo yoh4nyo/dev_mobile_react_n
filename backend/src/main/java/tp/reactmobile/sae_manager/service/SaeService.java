@@ -1,7 +1,7 @@
-package fr.mmi.sae.service;
+package tp.reactmobile.sae_manager.service;
 
-import fr.mmi.sae.model.Sae;
-import fr.mmi.sae.repository.SaeRepository;
+import tp.reactmobile.sae_manager.model.Sae;
+import tp.reactmobile.sae_manager.repository.SaeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 

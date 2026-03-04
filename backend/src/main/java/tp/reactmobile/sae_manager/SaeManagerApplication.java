@@ -1,13 +1,13 @@
-package com.example.sae_api;
+package tp.reactmobile.sae_manager;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class SaeApiApplication {
+public class SaeManagerApplication {
 
 	public static void main(String[] args) {
-		SpringApplication.run(SaeApiApplication.class, args);
+		SpringApplication.run(SaeManagerApplication.class, args);
 	}
 
 }

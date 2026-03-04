@@ -8,11 +8,11 @@
 		<version>4.0.3</version>
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.example</groupId>
-	<artifactId>sae-api</artifactId>
+	<groupId>tp.reactmobile</groupId>
+	<artifactId>sae-manager</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>sae-api</name>
-	<description>API pour la gestion des SAe BUT MMI</description>
+	<name>sae-manager</name>
+	<description>Gestion des SAE BUT MMI</description>
 	<url/>
 	<licenses>
 		<license/>
@@ -43,6 +43,12 @@
 			<artifactId>spring-boot-starter-webmvc</artifactId>
 		</dependency>
 
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-devtools</artifactId>
+			<scope>runtime</scope>
+			<optional>true</optional>
+		</dependency>
 		<dependency>
 			<groupId>com.h2database</groupId>
 			<artifactId>h2</artifactId>

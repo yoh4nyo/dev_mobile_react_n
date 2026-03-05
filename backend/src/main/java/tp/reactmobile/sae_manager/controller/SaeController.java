@@ -1,13 +1,14 @@
 package tp.reactmobile.sae_manager.controller;
 
-import tp.reactmobile.sae_manager.model.Sae;
-import tp.reactmobile.sae_manager.service.SaeService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tp.reactmobile.sae_manager.model.Sae;
+import tp.reactmobile.sae_manager.service.SaeService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/saes")
@@ -26,19 +27,16 @@ public class SaeController {
         return new ResponseEntity<>(saeService.getAllSaes(), HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<Sae> getSaeById(@PathVariable Long id) {
+        Optional<Sae> sae = saeService.getSaeById(id);
+        return sae.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
     @GetMapping("/annee/{annee}")
-    public ResponseEntity<List<Sae>> getSaesByAnnee(@PathVariable String annee) {
+    public ResponseEntity<List<Sae>> getSaesByAnnee(@PathVariable Integer annee) {
         return new ResponseEntity<>(saeService.getSaesByAnnee(annee), HttpStatus.OK);
-    }
-
-    @GetMapping("/domaine/{domaine}")
-    public ResponseEntity<List<Sae>> getSaesByDomaine(@PathVariable String domaine) {
-        return new ResponseEntity<>(saeService.getSaesByDomaine(domaine), HttpStatus.OK);
-    }
-
-    @GetMapping("/classement")
-    public ResponseEntity<List<Sae>> getClassement() {
-        return new ResponseEntity<>(saeService.getSaesClassement(), HttpStatus.OK);
     }
 
     @PostMapping

@@ -2,6 +2,7 @@ package tp.reactmobile.sae_manager.model;
 
 import jakarta.persistence.*;
 import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -9,88 +10,95 @@ public class Sae {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Long idSae;
 
-    private String titre;
-    private String annee;
-    private String semestre;
-    private String domaine;
+    private String nom;
 
     @Column(columnDefinition = "TEXT")
-    private String competences;
+    private String contexte;
 
-    @Column(columnDefinition = "TEXT")
-    private String auteurs;
-
+    private Integer semestre;
+    private Integer annee;
+    private String referent;
     private LocalDate dateDebut;
     private LocalDate dateFin;
-    private Double noteObtenue;
-    private Double tauxReussite;
-    private String ueCorrespondante;
+    private String tauxReussite;
 
-    private String lienSite;
-    private String lienProduction;
+    // ============================================
+    // Relations ManyToMany (Tables pivots simples)
+    // ============================================
 
-    @ElementCollection
-    private List<String> imagesUrl;
+    // Table SAE_UE
+    @ManyToMany
+    @JoinTable(name = "sae_ue", joinColumns = @JoinColumn(name = "id_sae"), inverseJoinColumns = @JoinColumn(name = "id_ue"))
+    private List<Ue> ues = new ArrayList<>();
 
-    public Sae() {
+    // Table SAE_Ressource
+    @ManyToMany
+    @JoinTable(name = "sae_ressource", joinColumns = @JoinColumn(name = "id_sae"), inverseJoinColumns = @JoinColumn(name = "id_ressource"))
+    private List<Ressource> ressources = new ArrayList<>();
+
+    // Table SAE_AC
+    @ManyToMany
+    @JoinTable(name = "sae_ac", joinColumns = @JoinColumn(name = "id_sae"), inverseJoinColumns = @JoinColumn(name = "id_ac"))
+    private List<Ac> apprentissagesCritiques = new ArrayList<>();
+
+    // ============================================
+    // Relation OneToMany (Table pivot avec attributs)
+    // ============================================
+    @OneToMany(mappedBy = "sae", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<SaeGrp> saeGroupes = new ArrayList<>();
+
+    // ============================================
+    // Getters / Setters
+    // ============================================
+
+    public Long getIdSae() {
+        return idSae;
     }
 
-    public Long getId() {
-        return id;
+    public void setIdSae(Long idSae) {
+        this.idSae = idSae;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    public String getNom() {
+        return nom;
     }
 
-    public String getTitre() {
-        return titre;
+    public void setNom(String nom) {
+        this.nom = nom;
     }
 
-    public void setTitre(String titre) {
-        this.titre = titre;
+    public String getContexte() {
+        return contexte;
     }
 
-    public String getAnnee() {
-        return annee;
+    public void setContexte(String contexte) {
+        this.contexte = contexte;
     }
 
-    public void setAnnee(String annee) {
-        this.annee = annee;
-    }
-
-    public String getSemestre() {
+    public Integer getSemestre() {
         return semestre;
     }
 
-    public void setSemestre(String semestre) {
+    public void setSemestre(Integer semestre) {
         this.semestre = semestre;
     }
 
-    public String getDomaine() {
-        return domaine;
+    public Integer getAnnee() {
+        return annee;
     }
 
-    public void setDomaine(String domaine) {
-        this.domaine = domaine;
+    public void setAnnee(Integer annee) {
+        this.annee = annee;
     }
 
-    public String getCompetences() {
-        return competences;
+    public String getReferent() {
+        return referent;
     }
 
-    public void setCompetences(String competences) {
-        this.competences = competences;
-    }
-
-    public String getAuteurs() {
-        return auteurs;
-    }
-
-    public void setAuteurs(String auteurs) {
-        this.auteurs = auteurs;
+    public void setReferent(String referent) {
+        this.referent = referent;
     }
 
     public LocalDate getDateDebut() {
@@ -109,51 +117,43 @@ public class Sae {
         this.dateFin = dateFin;
     }
 
-    public Double getNoteObtenue() {
-        return noteObtenue;
-    }
-
-    public void setNoteObtenue(Double noteObtenue) {
-        this.noteObtenue = noteObtenue;
-    }
-
-    public Double getTauxReussite() {
+    public String getTauxReussite() {
         return tauxReussite;
     }
 
-    public void setTauxReussite(Double tauxReussite) {
+    public void setTauxReussite(String tauxReussite) {
         this.tauxReussite = tauxReussite;
     }
 
-    public String getUeCorrespondante() {
-        return ueCorrespondante;
+    public List<Ue> getUes() {
+        return ues;
     }
 
-    public void setUeCorrespondante(String ueCorrespondante) {
-        this.ueCorrespondante = ueCorrespondante;
+    public void setUes(List<Ue> ues) {
+        this.ues = ues;
     }
 
-    public String getLienSite() {
-        return lienSite;
+    public List<Ressource> getRessources() {
+        return ressources;
     }
 
-    public void setLienSite(String lienSite) {
-        this.lienSite = lienSite;
+    public void setRessources(List<Ressource> ressources) {
+        this.ressources = ressources;
     }
 
-    public String getLienProduction() {
-        return lienProduction;
+    public List<Ac> getApprentissagesCritiques() {
+        return apprentissagesCritiques;
     }
 
-    public void setLienProduction(String lienProduction) {
-        this.lienProduction = lienProduction;
+    public void setApprentissagesCritiques(List<Ac> apprentissagesCritiques) {
+        this.apprentissagesCritiques = apprentissagesCritiques;
     }
 
-    public List<String> getImagesUrl() {
-        return imagesUrl;
+    public List<SaeGrp> getSaeGroupes() {
+        return saeGroupes;
     }
 
-    public void setImagesUrl(List<String> imagesUrl) {
-        this.imagesUrl = imagesUrl;
+    public void setSaeGroupes(List<SaeGrp> saeGroupes) {
+        this.saeGroupes = saeGroupes;
     }
 }

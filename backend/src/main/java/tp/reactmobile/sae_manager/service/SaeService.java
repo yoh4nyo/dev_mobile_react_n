@@ -1,11 +1,12 @@
 package tp.reactmobile.sae_manager.service;
 
-import tp.reactmobile.sae_manager.model.Sae;
-import tp.reactmobile.sae_manager.repository.SaeRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import tp.reactmobile.sae_manager.model.Sae;
+import tp.reactmobile.sae_manager.repository.SaeRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class SaeService {
@@ -21,16 +22,12 @@ public class SaeService {
         return saeRepository.findAll();
     }
 
-    public List<Sae> getSaesByAnnee(String annee) {
+    public List<Sae> getSaesByAnnee(Integer annee) {
         return saeRepository.findByAnnee(annee);
     }
 
-    public List<Sae> getSaesByDomaine(String domaine) {
-        return saeRepository.findByDomaineIgnoreCase(domaine);
-    }
-
-    public List<Sae> getSaesClassement() {
-        return saeRepository.findAllByOrderByNoteObtenueDesc();
+    public Optional<Sae> getSaeById(Long id) {
+        return saeRepository.findById(id);
     }
 
     public Sae addSae(Sae sae) {

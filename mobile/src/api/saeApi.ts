@@ -1,16 +1,16 @@
 import axios from 'axios';
-import type { Sae, SaeCreatePayload } from '../types/sae';
 
-const BASE_URL = 'http://localhost:8080/api/saes';
+const BASE_URL =
+  process.env.EXPO_PUBLIC_API_URL?.trim() || 'http://localhost:8080/api/saes';
 
 const api = axios.create({
   baseURL: BASE_URL,
   timeout: 10000,
 });
 
-export const getSaes = async (): Promise<Sae[]> => {
+export const getSaes = async () => {
   try {
-    const response = await api.get<Sae[]>('');
+    const response = await api.get('');
     return response.data;
   } catch (error) {
     console.error('Erreur récupération SAés:', error);
@@ -18,9 +18,9 @@ export const getSaes = async (): Promise<Sae[]> => {
   }
 };
 
-export const getSaesByAnnee = async (annee: number): Promise<Sae[]> => {
+export const getSaesByAnnee = async (annee: number) => {
   try {
-    const response = await api.get<Sae[]>(`/annee/${annee}`);
+    const response = await api.get(`/annee/${annee}`);
     return response.data;
   } catch (error) {
     console.error('Erreur filtrage année:', error);
@@ -28,9 +28,9 @@ export const getSaesByAnnee = async (annee: number): Promise<Sae[]> => {
   }
 };
 
-export const addSae = async (saeData: SaeCreatePayload): Promise<Sae> => {
+export const addSae = async (saeData: any) => {
   try {
-    const response = await api.post<Sae>('', saeData);
+    const response = await api.post('', saeData);
     return response.data;
   } catch (error) {
     console.error('Erreur ajout SAé:', error);

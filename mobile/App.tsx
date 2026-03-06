@@ -11,11 +11,10 @@ import HomeScreen from './src/screens/HomeScreen';
 import SaeListScreen from './src/screens/SaeListScreen';
 import SaeDetailScreen from './src/screens/SaeDetailScreen';
 import AddSaeScreen from './src/screens/AddSaeScreen';
-import type { RootStackParamList } from './src/types/navigation';
 import { COLORS } from './src/theme/colors';
 import { FONTS } from './src/theme/typography';
 
-const Stack = createNativeStackNavigator<RootStackParamList>();
+const Stack = createNativeStackNavigator();
 
 export default function App() {
   const [fontsLoaded] = useFonts({
@@ -43,22 +42,22 @@ export default function App() {
         <Stack.Screen
           name="Home"
           component={HomeScreen}
-          options={{ title: 'SAEHub' }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="SaeList"
           component={SaeListScreen}
-          options={{ title: 'Banque des SAé' }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="SaeDetail"
           component={SaeDetailScreen}
-          options={({ route }) => ({ title: route.params.sae.nom })}
+          options={{ title: 'Detail SAE' }}
         />
         <Stack.Screen
           name="AddSae"
           component={AddSaeScreen}
-          options={{ title: 'Ajouter une SAé' }}
+          options={{ title: 'Ajouter une SAE' }}
         />
       </Stack.Navigator>
     </NavigationContainer>

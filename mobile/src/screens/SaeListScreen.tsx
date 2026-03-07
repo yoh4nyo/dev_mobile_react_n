@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import {
   View,
   Text,
@@ -10,43 +10,40 @@ import {
   RefreshControl,
 } from 'react-native';
 import { getSaes, getSaesByAnnee } from '../api/saeApi';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
 import { FONTS } from '../theme/typography';
 
-type FilterMode = 'ALL' | 'MMI2' | 'MMI3';
-
-const FILTERS: { key: FilterMode; label: string }[] = [
-  { key: 'ALL', label: 'Tous' },
-  { key: 'MMI2', label: 'MMI 2' },
-  { key: 'MMI3', label: 'MMI 3' },
-];
-
 const SaeListScreen = ({ navigation }: any) => {
   const [saes, setSaes] = useState<any[]>([]);
-  const [loading, setLoading] = useState<boolean>(true);
-  const [refreshing, setRefreshing] = useState<boolean>(false);
-  const [filterMode, setFilterMode] = useState<FilterMode>('ALL');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [error, setError] = useState<string | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
+  const [filter, setFilter] = useState('ALL');
+  const [search, setSearch] = useState('');
+  const [error, setError] = useState('');
 
-  const loadSaes = async (isRefresh = false): Promise<void> => {
-    if (isRefresh) {
+  // chargement des SAE
+  const chargerSaes = async (refresh = false) => {
+    if (refresh) {
       setRefreshing(true);
     } else {
       setLoading(true);
     }
-
-    setError(null);
+    setError('');
 
     try {
-      const data =
-        filterMode === 'ALL'
-          ? await getSaes()
-          : await getSaesByAnnee(filterMode === 'MMI2' ? 2 : 3);
+      let data;
+      if (filter === 'ALL') {
+        data = await getSaes();
+      } else if (filter === 'MMI2') {
+        data = await getSaesByAnnee(2);
+      } else {
+        data = await getSaesByAnnee(3);
+      }
       setSaes(data);
     } catch (e) {
       console.error(e);
-      setError("Impossible de charger les SAE. Verifie si le backend tourne.");
+      setError('Impossible de charger les SAE');
     } finally {
       setLoading(false);
       setRefreshing(false);
@@ -54,84 +51,81 @@ const SaeListScreen = ({ navigation }: any) => {
   };
 
   useEffect(() => {
-    loadSaes();
-  }, [filterMode]);
+    chargerSaes();
+  }, [filter]);
 
-  const visibleSaes = useMemo(() => {
-    const q = searchQuery.trim().toLowerCase();
-    if (!q) return saes;
-
-    return saes.filter((item) =>
-      item.nom.toLowerCase().includes(q) ||
-      (item.referent || '').toLowerCase().includes(q)
+  // filtrage par recherche
+  const saeFiltrees = () => {
+    if (!search.trim()) 
+      return saes;
+    const q = search.toLowerCase();
+    return saes.filter(
+      (s) => s.nom.toLowerCase().includes(q) || (s.referent || '').toLowerCase().includes(q)
     );
-  }, [saes, searchQuery]);
+  };
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <View style={styles.shapeTopRight} />
       <View style={styles.shapeBottomLeft} />
 
+      {/* header avec retour */}
       <View style={styles.header}>
-        <View style={styles.headerRow}>
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            hitSlop={{ top: 10, bottom: 10, left: 10, right: 10 }}
-            style={styles.backButton}
-          >
-            <Text style={styles.backArrow}>{'<'}</Text>
-          </TouchableOpacity>
-          <View>
-            <Text style={styles.headerTitle}>Liste des SAE</Text>
-            <Text style={styles.headerSub}>{visibleSaes.length} resultat{visibleSaes.length !== 1 ? 's' : ''}</Text>
-          </View>
+        <TouchableOpacity onPress={() => navigation.goBack()} style={styles.backBtn}>
+          <Text style={styles.backArrow}>{'<'}</Text>
+        </TouchableOpacity>
+        <View>
+          <Text style={styles.headerTitle}>Liste des SAE</Text>
+          <Text style={styles.headerSub}>{saeFiltrees().length} resultat(s)</Text>
         </View>
       </View>
 
+      {/* filtres */}
       <View style={styles.filterRow}>
-        {FILTERS.map((f) => (
-          <TouchableOpacity
-            key={f.key}
-            style={[styles.filterPill, filterMode === f.key && styles.filterPillActive]}
-            onPress={() => setFilterMode(f.key)}
-            activeOpacity={0.8}
-          >
-            <Text style={[styles.filterPillText, filterMode === f.key && styles.filterPillTextActive]}>
-              {f.label}
-            </Text>
-          </TouchableOpacity>
-        ))}
+        <TouchableOpacity
+          style={[styles.filterBtn, filter === 'ALL' && styles.filterBtnActive]}
+          onPress={() => setFilter('ALL')}
+        >
+          <Text style={[styles.filterText, filter === 'ALL' && styles.filterTextActive]}>Tous</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.filterBtn, filter === 'MMI2' && styles.filterBtnActive]}
+          onPress={() => setFilter('MMI2')}
+        >
+          <Text style={[styles.filterText, filter === 'MMI2' && styles.filterTextActive]}>MMI 2</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          style={[styles.filterBtn, filter === 'MMI3' && styles.filterBtnActive]}
+          onPress={() => setFilter('MMI3')}
+        >
+          <Text style={[styles.filterText, filter === 'MMI3' && styles.filterTextActive]}>MMI 3</Text>
+        </TouchableOpacity>
       </View>
 
+      {/* barre de recherche */}
       <View style={styles.searchWrap}>
         <TextInput
           style={styles.searchInput}
-          placeholder="Rechercher par nom ou referent..."
+          placeholder="Rechercher..."
           placeholderTextColor={COLORS.gray}
-          value={searchQuery}
-          onChangeText={setSearchQuery}
-          autoCapitalize="none"
+          value={search}
+          onChangeText={setSearch}
         />
       </View>
 
-      {error ? (
-        <View style={styles.errorBox}>
-          <Text style={styles.errorText}>{error}</Text>
-        </View>
-      ) : null}
+      {error ? <Text style={styles.errorText}>{error}</Text> : null}
 
       {loading ? (
-        <ActivityIndicator size="large" color={COLORS.gray} style={styles.loader} />
+        <ActivityIndicator size="large" color={COLORS.gray} style={{ marginTop: 40 }} />
       ) : (
         <FlatList
-          data={visibleSaes}
+          data={saeFiltrees()}
           keyExtractor={(item) => item.idSae.toString()}
-          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => loadSaes(true)} />}
+          refreshControl={<RefreshControl refreshing={refreshing} onRefresh={() => chargerSaes(true)} />}
           ListEmptyComponent={<Text style={styles.emptyText}>Aucune SAE trouvee.</Text>}
           renderItem={({ item }) => (
             <TouchableOpacity
               style={styles.card}
-              activeOpacity={0.85}
               onPress={() => navigation.navigate('SaeDetail', { sae: item })}
             >
               <View style={styles.cardTop}>
@@ -140,23 +134,17 @@ const SaeListScreen = ({ navigation }: any) => {
                 </View>
                 <Text style={styles.semTag}>S{item.semestre}</Text>
               </View>
-
               <Text style={styles.cardTitle}>{item.nom}</Text>
-
-              <Text style={styles.cardReferent}>
-                {item.referent || 'Referent non renseigne'}
-              </Text>
-
+              <Text style={styles.cardRef}>{item.referent || 'Referent non renseigne'}</Text>
               <View style={styles.cardBottom}>
-                <Text style={styles.detailsLink}>Voir le detail</Text>
-                <Text style={styles.detailsArrow}>{'>'}</Text>
+                <Text style={styles.voirDetail}>Voir le detail</Text>
               </View>
             </TouchableOpacity>
           )}
           contentContainerStyle={styles.listContent}
         />
       )}
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -184,24 +172,19 @@ const styles = StyleSheet.create({
     left: -50,
   },
   header: {
+    flexDirection: 'row',
+    alignItems: 'center',
     paddingHorizontal: 18,
     paddingTop: 14,
     paddingBottom: 4,
   },
-  headerRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  backButton: {
+  backBtn: {
     marginRight: 12,
-    paddingVertical: 4,
-    paddingHorizontal: 2,
   },
   backArrow: {
     fontSize: 24,
     fontFamily: FONTS.bold,
     color: COLORS.black,
-    lineHeight: 28,
   },
   headerTitle: {
     fontSize: 26,
@@ -212,7 +195,6 @@ const styles = StyleSheet.create({
     fontSize: 13,
     fontFamily: FONTS.regular,
     color: COLORS.gray,
-    marginTop: 2,
   },
   filterRow: {
     flexDirection: 'row',
@@ -221,7 +203,7 @@ const styles = StyleSheet.create({
     paddingBottom: 4,
     gap: 8,
   },
-  filterPill: {
+  filterBtn: {
     backgroundColor: '#f7f4f7',
     paddingVertical: 8,
     paddingHorizontal: 18,
@@ -229,16 +211,16 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#ddd3db',
   },
-  filterPillActive: {
+  filterBtnActive: {
     backgroundColor: COLORS.black,
     borderColor: COLORS.black,
   },
-  filterPillText: {
+  filterText: {
     fontFamily: FONTS.semiBold,
     fontSize: 13,
     color: COLORS.black,
   },
-  filterPillTextActive: {
+  filterTextActive: {
     color: COLORS.lightGray,
   },
   searchWrap: {
@@ -257,20 +239,10 @@ const styles = StyleSheet.create({
     color: COLORS.black,
     fontFamily: FONTS.regular,
   },
-  errorBox: {
-    marginHorizontal: 18,
-    marginTop: 8,
-    backgroundColor: '#fce8e8',
-    borderRadius: 10,
-    padding: 12,
-  },
   errorText: {
+    margin: 18,
     color: '#9d2020',
     fontFamily: FONTS.semiBold,
-    fontSize: 13,
-  },
-  loader: {
-    marginTop: 40,
   },
   listContent: {
     padding: 18,
@@ -312,31 +284,22 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.bold,
     marginBottom: 4,
   },
-  cardReferent: {
+  cardRef: {
     fontSize: 13,
     color: COLORS.gray,
     fontFamily: FONTS.regular,
     marginBottom: 10,
   },
   cardBottom: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'flex-end',
+    alignItems: 'flex-end',
     borderTopWidth: 1,
     borderTopColor: '#ded6dc',
     paddingTop: 10,
   },
-  detailsLink: {
+  voirDetail: {
     fontSize: 13,
     fontFamily: FONTS.semiBold,
     color: COLORS.black,
-    marginRight: 4,
-  },
-  detailsArrow: {
-    fontSize: 16,
-    fontFamily: FONTS.bold,
-    color: COLORS.black,
-    lineHeight: 18,
   },
   emptyText: {
     textAlign: 'center',

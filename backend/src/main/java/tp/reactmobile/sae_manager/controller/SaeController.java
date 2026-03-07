@@ -44,4 +44,14 @@ public class SaeController {
         Sae nouvelleSae = saeService.addSae(sae);
         return new ResponseEntity<>(nouvelleSae, HttpStatus.CREATED);
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteSae(@PathVariable Long id) {
+        Optional<Sae> sae = saeService.getSaeById(id);
+        if (sae.isPresent()) {
+            saeService.deleteSae(id);
+            return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+        }
+        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+    }
 }

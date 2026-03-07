@@ -52,12 +52,12 @@ export default function App() {
         <Stack.Screen
           name="SaeDetail"
           component={SaeDetailScreen}
-          options={{ title: 'Detail SAE' }}
+          options={{ headerShown: false }}
         />
         <Stack.Screen
           name="AddSae"
           component={AddSaeScreen}
-          options={{ title: 'Ajouter une SAE' }}
+          options={{ headerShown: false }}
         />
       </Stack.Navigator>
     </NavigationContainer>

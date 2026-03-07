@@ -1,60 +1,45 @@
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
 import { COLORS } from '../theme/colors';
 import { FONTS } from '../theme/typography';
 
 const HomeScreen = ({ navigation }: any) => {
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
+      {/* formes decoratives */}
       <View style={styles.shapeTop} />
       <View style={styles.shapeCenter} />
       <View style={styles.shapeBottom} />
 
       <View style={styles.content}>
+        {/* carte titre */}
         <View style={styles.heroCard}>
           <Text style={styles.kicker}>MMI Meaux</Text>
           <Text style={styles.title}>SAEHub</Text>
           <Text style={styles.subtitle}>Consulter et ajouter les SAE de MMI2 et MMI3</Text>
         </View>
 
-        <View style={styles.buttonContainer}>
-          <TouchableOpacity
-            style={[styles.button, styles.primaryButton]}
-            activeOpacity={0.85}
-            hitSlop={{ top: 6, bottom: 6, left: 4, right: 4 }}
-            onPress={() => navigation.navigate('SaeList')}
-            accessibilityRole="button"
-            accessibilityLabel="Consulter les SAE"
-          >
-            <View style={styles.buttonContent}>
-              <View style={styles.buttonTextWrap}>
-                <Text style={styles.buttonText}>Consulter les SAE</Text>
-                <Text style={styles.buttonHint}>Voir la liste complete des SAE</Text>
-              </View>
-              <Text style={styles.buttonArrow}>{'>'}</Text>
-            </View>
-          </TouchableOpacity>
+        {/* bouton consulter */}
+        <TouchableOpacity
+          style={styles.btnPrimary}
+          onPress={() => navigation.navigate('SaeList')}
+        >
+          <Text style={styles.btnPrimaryText}>Consulter les SAE</Text>
+          <Text style={styles.btnPrimaryHint}>Voir la liste complete</Text>
+        </TouchableOpacity>
 
-          <TouchableOpacity
-            style={[styles.button, styles.secondaryButton]}
-            activeOpacity={0.85}
-            hitSlop={{ top: 6, bottom: 6, left: 4, right: 4 }}
-            onPress={() => navigation.navigate('AddSae')}
-            accessibilityRole="button"
-            accessibilityLabel="Ajouter une SAE"
-          >
-            <View style={styles.buttonContent}>
-              <View style={styles.buttonTextWrap}>
-                <Text style={styles.buttonTextSecondary}>Ajouter une SAE</Text>
-                <Text style={styles.buttonHintSecondary}>Creer une nouvelle entree rapidement</Text>
-              </View>
-              <Text style={styles.buttonArrowSecondary}>{'>'}</Text>
-            </View>
-          </TouchableOpacity>
-        </View>
+        {/* bouton ajouter */}
+        <TouchableOpacity
+          style={styles.btnSecondary}
+          onPress={() => navigation.navigate('AddSae')}
+        >
+          <Text style={styles.btnSecondaryText}>Ajouter une SAE</Text>
+          <Text style={styles.btnSecondaryHint}>Creer une nouvelle entree</Text>
+        </TouchableOpacity>
 
-        <Text style={styles.footerText}>Yohan S et Alexandre L - TP Developpement Mobile</Text>
+        <Text style={styles.footer}>Yohan S et Alexandre L - TP Developpement Mobile</Text>
       </View>
-    </View>
+    </SafeAreaView>
   );
 };
 
@@ -100,15 +85,13 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1,
     borderColor: '#ddd3db',
-    paddingHorizontal: 16,
-    paddingVertical: 18,
+    padding: 16,
     marginBottom: 16,
   },
   kicker: {
     fontSize: 13,
     color: COLORS.gray,
     fontFamily: FONTS.semiBold,
-    letterSpacing: 1,
     textTransform: 'uppercase',
   },
   title: {
@@ -122,72 +105,44 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.regular,
     color: COLORS.gray,
     marginTop: 4,
-    marginBottom: 4,
   },
-  buttonContainer: {
-    width: '100%',
-  },
-  button: {
-    minHeight: 72,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
-    borderRadius: 12,
-    justifyContent: 'center',
-    marginBottom: 12,
-    borderWidth: 1,
-  },
-  buttonContent: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'space-between',
-  },
-  buttonTextWrap: {
-    flex: 1,
-    marginRight: 10,
-  },
-  primaryButton: {
+  btnPrimary: {
     backgroundColor: COLORS.black,
-    borderColor: COLORS.black,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
   },
-  secondaryButton: {
-    backgroundColor: COLORS.beige,
-    borderColor: COLORS.gray,
-  },
-  buttonText: {
+  btnPrimaryText: {
     color: COLORS.lightGray,
     fontSize: 16,
     fontFamily: FONTS.semiBold,
   },
-  buttonHint: {
+  btnPrimaryHint: {
     color: '#cfcfcf',
     fontSize: 12,
-    marginTop: 2,
+    marginTop: 3,
     fontFamily: FONTS.regular,
   },
-  buttonArrow: {
-    color: COLORS.lightGray,
-    fontSize: 22,
-    lineHeight: 24,
-    fontFamily: FONTS.bold,
+  btnSecondary: {
+    backgroundColor: COLORS.beige,
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: COLORS.gray,
   },
-  buttonTextSecondary: {
+  btnSecondaryText: {
     color: COLORS.black,
     fontSize: 16,
     fontFamily: FONTS.semiBold,
   },
-  buttonHintSecondary: {
+  btnSecondaryHint: {
     color: '#5f5f5f',
     fontSize: 12,
-    marginTop: 2,
+    marginTop: 3,
     fontFamily: FONTS.regular,
   },
-  buttonArrowSecondary: {
-    color: COLORS.black,
-    fontSize: 22,
-    lineHeight: 24,
-    fontFamily: FONTS.bold,
-  },
-  footerText: {
+  footer: {
     marginTop: 6,
     textAlign: 'center',
     color: COLORS.gray,

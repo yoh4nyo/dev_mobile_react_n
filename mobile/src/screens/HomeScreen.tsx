@@ -37,6 +37,14 @@ const HomeScreen = ({ navigation }: any) => {
           <Text style={styles.btnSecondaryHint}>Creer une nouvelle entree</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity
+          style={styles.btnTertiary}
+          onPress={() => navigation.navigate('Classement')}
+        >
+          <Text style={styles.btnTertiaryText}>Voir le classement</Text>
+          <Text style={styles.btnTertiaryHint}>Classer les SAE par note</Text>
+        </TouchableOpacity>
+
         <Text style={styles.footer}>Yohan S et Alexandre L - TP Developpement Mobile</Text>
       </View>
     </SafeAreaView>
@@ -137,6 +145,25 @@ const styles = StyleSheet.create({
     fontFamily: FONTS.semiBold,
   },
   btnSecondaryHint: {
+    color: '#5f5f5f',
+    fontSize: 12,
+    marginTop: 3,
+    fontFamily: FONTS.regular,
+  },
+  btnTertiary: {
+    backgroundColor: '#f7f4f7',
+    borderRadius: 12,
+    padding: 16,
+    marginBottom: 12,
+    borderWidth: 1,
+    borderColor: '#ddd3db',
+  },
+  btnTertiaryText: {
+    color: COLORS.black,
+    fontSize: 16,
+    fontFamily: FONTS.semiBold,
+  },
+  btnTertiaryHint: {
     color: '#5f5f5f',
     fontSize: 12,
     marginTop: 3,

@@ -11,6 +11,7 @@ import HomeScreen from './src/screens/HomeScreen';
 import SaeListScreen from './src/screens/SaeListScreen';
 import SaeDetailScreen from './src/screens/SaeDetailScreen';
 import AddSaeScreen from './src/screens/AddSaeScreen';
+import ClassementScreen from './src/screens/ClassementScreen';
 import { COLORS } from './src/theme/colors';
 import { FONTS } from './src/theme/typography';
 
@@ -57,6 +58,11 @@ export default function App() {
         <Stack.Screen
           name="AddSae"
           component={AddSaeScreen}
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
+          name="Classement"
+          component={ClassementScreen}
           options={{ headerShown: false }}
         />
       </Stack.Navigator>

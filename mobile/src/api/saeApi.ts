@@ -15,6 +15,12 @@ export const getSaes = async () => {
   return res.data;
 };
 
+// recuperer les stats de note d une SAE
+export const getSaeNoteStats = async (id: number) => {
+  const res = await api.get(`/saes/${id}/notes/stats`);
+  return res.data;
+};
+
 // recuperer les SAE d une annee
 export const getSaesByAnnee = async (annee: number) => {
   const res = await api.get(`/saes/annee/${annee}`);

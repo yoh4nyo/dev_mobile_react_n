@@ -4,6 +4,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import tp.reactmobile.sae_manager.dto.NoteStatsResponse;
 import tp.reactmobile.sae_manager.model.Sae;
 import tp.reactmobile.sae_manager.service.SaeService;
 
@@ -31,6 +32,13 @@ public class SaeController {
     public ResponseEntity<Sae> getSaeById(@PathVariable Long id) {
         Optional<Sae> sae = saeService.getSaeById(id);
         return sae.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
+                .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
+    }
+
+    @GetMapping("/{id}/notes/stats")
+    public ResponseEntity<NoteStatsResponse> getSaeNoteStats(@PathVariable Long id) {
+        Optional<NoteStatsResponse> stats = saeService.getNoteStatsBySaeId(id);
+        return stats.map(value -> new ResponseEntity<>(value, HttpStatus.OK))
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
